@@ -1,5 +1,6 @@
 package com.example.mythymleaf.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -17,6 +18,7 @@ public class User {
     private String password;
     private Boolean enabled;
 
+    @JsonIgnore
     @ManyToMany
     @JoinTable(
             name="user_role",
@@ -25,6 +27,9 @@ public class User {
     )
     private List<Role> roles = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    //@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    //@JsonIgnore 하면 LAZY라더라도 검색 안함 return 을 할 필요 없으니까
+    //LAZY는 필요할때만 쿼리를 날려 가져온다.
     private List<Board> boards = new ArrayList<>();
 }
